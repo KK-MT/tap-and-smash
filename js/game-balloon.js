@@ -3,7 +3,8 @@
   window.APP = window.APP || {};
 
   var MAX_BALLOONS = 8;
-  var SPAWN_INTERVAL_MS = 800;
+  var MIN_VISIBLE_BALLOONS = 3;
+  var SPAWN_INTERVAL_MS = 500;
   var COLORS = ['#ff5c7c', '#ffb703', '#4cc9f0', '#7bdc6a', '#c77dff'];
 
   var canvas, ctx, controller, rafId, spawnTimerId;
@@ -35,7 +36,7 @@
       y: y,
       radius: radius,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      vy: -(40 + Math.random() * 30),
+      vy: -(90 + Math.random() * 50),
       wobblePhase: Math.random() * Math.PI * 2,
       wobbleAmp: 10 + Math.random() * 15,
       wobbleFreq: 1 + Math.random() * 1.5,
@@ -62,6 +63,15 @@
       color: balloon.color
     });
     sharedCtx.playSound('balloonPop');
+    replenishIfNeeded();
+  }
+
+  function replenishIfNeeded() {
+    // Spawn replacements already on-screen so popping the last balloon
+    // doesn't leave an empty stage waiting for one to rise from below.
+    while (balloons.length < MIN_VISIBLE_BALLOONS && balloons.length < MAX_BALLOONS) {
+      spawnBalloon(true);
+    }
   }
 
   function onPointerDown(event) {
