@@ -3,7 +3,7 @@
   window.APP = window.APP || {};
 
   var MAX_BALLOONS = 8;
-  var SPAWN_INTERVAL_MS = 800;
+  var SPAWN_INTERVAL_MS = 400;
   var COLORS = ['#ff5c7c', '#ffb703', '#4cc9f0', '#7bdc6a', '#c77dff'];
 
   var canvas, ctx, controller, rafId, spawnTimerId;
@@ -35,7 +35,7 @@
       y: y,
       radius: radius,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      vy: -(40 + Math.random() * 30),
+      vy: -(90 + Math.random() * 50),
       wobblePhase: Math.random() * Math.PI * 2,
       wobbleAmp: 10 + Math.random() * 15,
       wobbleFreq: 1 + Math.random() * 1.5,
