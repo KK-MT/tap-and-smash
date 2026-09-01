@@ -59,7 +59,32 @@
     return { spawnBurst: spawnBurst, update: update, draw: draw };
   }
 
+  function triggerShake(el, options) {
+    options = options || {};
+    var duration = options.duration || 80;
+    var className = options.className || 'shake';
+    el.classList.remove(className);
+    void el.offsetWidth; // force reflow so the animation restarts on rapid retrigger
+    el.classList.add(className);
+    setTimeout(function () {
+      el.classList.remove(className);
+    }, duration);
+  }
+
+  function spawnRipple(containerEl, x, y) {
+    var ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.addEventListener('animationend', function () {
+      ripple.remove();
+    }, { once: true });
+    containerEl.appendChild(ripple);
+  }
+
   APP.effects = {
-    createParticleSystem: createParticleSystem
+    createParticleSystem: createParticleSystem,
+    triggerShake: triggerShake,
+    spawnRipple: spawnRipple
   };
 })();

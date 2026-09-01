@@ -18,9 +18,10 @@ html, body {
 
 #stage {
   position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: calc(64px + env(safe-area-inset-bottom));
 }
 
 .balloon-canvas {
@@ -28,4 +29,138 @@ html, body {
   width: 100%;
   height: 100%;
   touch-action: none;
+}
+
+/* --- 発散方法の切り替えUI --- */
+#game-switcher {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 6px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: #12121f;
+  border-top: 1px solid #2a2a45;
+}
+
+.switch-btn {
+  flex: 1;
+  min-height: 44px;
+  border: none;
+  border-radius: 10px;
+  background: #21213d;
+  color: #b7b9d6;
+  font-size: 13px;
+  font-family: inherit;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.switch-btn.active {
+  background: #35356a;
+  color: #ffffff;
+}
+
+/* --- 紙くしゃくしゃ --- */
+.paper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 55vmin;
+  height: 70vmin;
+  max-width: 320px;
+  max-height: 400px;
+  background: linear-gradient(135deg, #fefaf1, #f1ead9);
+  border-radius: calc(18px + 32px * var(--crumple, 0));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transform: translate(-50%, -50%) scale(calc(1 - 0.35 * var(--crumple, 0))) rotate(calc(var(--crumple, 0) * 25deg));
+  filter: contrast(calc(100% + 30% * var(--crumple, 0))) brightness(calc(100% - 8% * var(--crumple, 0)));
+  touch-action: none;
+  cursor: pointer;
+  transition: border-radius 120ms ease, filter 120ms ease;
+}
+
+.paper.jitter {
+  animation: paperJitter 120ms ease;
+}
+
+.paper.crumpled {
+  border-radius: 50%;
+}
+
+@keyframes paperJitter {
+  0%, 100% { margin: 0; }
+  30% { margin: -2px 0 0 3px; }
+  60% { margin: 2px 0 0 -3px; }
+}
+
+/* --- 太鼓叩き --- */
+.drum-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px;
+}
+
+.pad {
+  position: relative;
+  overflow: hidden;
+  width: 30vmin;
+  height: 30vmin;
+  max-width: 160px;
+  max-height: 160px;
+  border-radius: 50%;
+  background: var(--pad-color, #4cc9f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.55);
+  font-weight: bold;
+  font-size: 14px;
+  touch-action: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pad.hit {
+  animation: padHit 150ms ease-out;
+}
+
+@keyframes padHit {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.85); }
+  100% { transform: scale(1); }
+}
+
+.ripple {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  animation: rippleExpand 400ms ease-out forwards;
+}
+
+@keyframes rippleExpand {
+  0% { transform: scale(0); opacity: 0.8; }
+  100% { transform: scale(8); opacity: 0; }
+}
+
+/* --- 画面シェイク（太鼓叩きのヒット時に#stageへ適用） --- */
+.shake {
+  animation: shakeScreen 80ms ease-in-out;
+}
+
+@keyframes shakeScreen {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(4px, -2px); }
+  75% { transform: translate(-3px, -1px); }
 }
