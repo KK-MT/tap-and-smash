@@ -106,14 +106,10 @@
     paperEl = document.createElement('div');
     paperEl.className = 'paper';
 
-    var frameEl = document.createElement('div');
-    frameEl.className = 'paper-frame';
-    paperEl.appendChild(frameEl);
-
     imgEl = document.createElement('img');
     imgEl.alt = '';
     imgEl.draggable = false;
-    frameEl.appendChild(imgEl);
+    paperEl.appendChild(imgEl);
 
     stageEl.appendChild(paperEl);
     preloadStageImages();
